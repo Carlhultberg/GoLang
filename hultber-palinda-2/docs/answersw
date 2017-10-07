@@ -1,0 +1,32 @@
+#bug1
+The first bugged was solved by adding a go routine in order not to end up with
+a deadlock.
+
+#bug2
+Solved by adding "sync" and add 11 to the wait group. If done wrong this will
+end up in a deadlock or in some cases a data race. The ordering is key and for
+example you have to add 11 before starting the go routine to prevent race conditions.
+You also need to add wg.Done() in the function who prints out the numbers to prevent
+a deadlock.
+
+#task2
+i)
+if you change their places the program will be sending to a closed channel and the
+program will panic.
+
+ii)
+It will panic again since when it's done producing strings and wg gets notified the
+channel also gets closed. So it send information to a closed channel.
+
+iii)
+In this example nothing should change. But the recievers does not know that it will not
+be sent any more values. It is only necessary to close a channel if the reciever looks
+for a close.
+
+iiii)
+The program will probably run faster since the senders and recievers are weighted better.
+The program will need less synchronasation.
+
+iiiii)
+yes, since you can still send on a channel which is not buffering if there's a receiver which
+is ready to recieve.
